@@ -1,7 +1,27 @@
 cmake_minimum_required(VERSION 3.10)
 
-include(ExternalProject)
+project(flat-sdk)
+option(BUILD_OFFLINE "Build offline" OFF)
+if (${BUILD_OFFLINE})
+    set_property(
+        DIRECTORY ${flat-sdk_SOURCE_DIR}
+        PROPERTY EP_UPDATE_DISCONNECTED 1
+    )
+endif()
 
+message("${CMAKE}")
+
+add_custom_target(offline
+    ${CMAKE_COMMAND} -H${CMAKE_SOURCE_DIR} -B${CMAKE_BINARY_DIR} -DBUILD_OFFLINE=ON
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)
+
+add_custom_target(online
+    ${CMAKE_COMMAND} -H${CMAKE_SOURCE_DIR} -B${CMAKE_BINARY_DIR} -DBUILD_OFFLINE=OFF
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)
+
+include(ExternalProject)
 ExternalProject_Add(libmm
     PREFIX libmm
     GIT_REPOSITORY https://github.com/NaoPross/libmm.git
