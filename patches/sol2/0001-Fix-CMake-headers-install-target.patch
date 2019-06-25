@@ -1,0 +1,36 @@
+From c087a0bdd84c9a96ef710de8f6f2c27fc7c0eae0 Mon Sep 17 00:00:00 2001
+From: Nao Pross <naopross@thearcway.org>
+Date: Mon, 24 Jun 2019 17:46:43 +0200
+Subject: [PATCH] Fix CMake headers install target
+
+---
+ CMakeLists.txt | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 961b39d6..698754cc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -113,7 +113,7 @@ set_target_properties(sol2
+ 
+ target_include_directories(sol2 INTERFACE
+ 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+-	$<INSTALL_INTERFACE:sol/include>)
++	$<INSTALL_INTERFACE:include>)
+ 
+ # # Version configurations
+ configure_package_config_file(
+@@ -135,8 +135,8 @@ install(EXPORT sol2
+ 	FILE sol2-targets.cmake
+ 	DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/sol2")
+ 
+-install(DIRECTORY include/
+-	DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/sol/include")
++install(DIRECTORY include/sol/
++	DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/sol/")
+ 
+ install(FILES
+ 	"${CMAKE_CURRENT_BINARY_DIR}/cmake/sol2-config.cmake"
+-- 
+2.17.1
+

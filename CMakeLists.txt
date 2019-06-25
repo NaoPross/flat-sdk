@@ -60,7 +60,7 @@ ExternalProject_Add(sol2
     GIT_SHALLOW ON
     GIT_PROGRESS ON
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/sol2
-    PATCH_COMMAND patch -p1 < ${CMAKE_CURRENT_SOURCE_DIR}/patches/sol2/0001-Fix-CMake-headers-install-target.patch.txt
+    PATCH_COMMAND true || patch -f -p1 < ${CMAKE_CURRENT_SOURCE_DIR}/patches/sol2/0001-Fix-CMake-headers-install-target.patch
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/root
 )
 
