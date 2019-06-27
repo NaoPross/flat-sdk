@@ -27,7 +27,6 @@ include(ExternalProject)
 ExternalProject_Add(libmm
     PREFIX libmm
     GIT_REPOSITORY https://github.com/NaoPross/libmm.git
-    GIT_TAG master
     GIT_PROGRESS ON
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libmm
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/root
@@ -37,7 +36,6 @@ ExternalProject_Add(libwsdl2
     DEPENDS libmm
     PREFIX libwsdl2
     GIT_REPOSITORY https://github.com/NaoPross/libwsdl2.git
-    GIT_TAG master
     GIT_PROGRESS ON
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libwsdl2
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/root
@@ -73,7 +71,6 @@ ExternalProject_Add(flatland
     DEPENDS lua
     PREFIX flatland
     GIT_REPOSITORY https://github.com/NaoPross/flatland.git
-    GIT_TAG master
     GIT_PROGRESS ON
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/flatland
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/root
