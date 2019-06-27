@@ -4,9 +4,11 @@ project(
     VERSION 0.1 
     LANGUAGES CXX)
 
-
+include(FindLua)
+  
 find_package(Flatland 0.1 REQUIRED)
 find_package(sol2 3.0 REQUIRED)
+find_package(Lua REQUIRED)
 
 add_executable(demo
     demo.cpp
@@ -34,4 +36,6 @@ target_compile_features(demo
 target_link_libraries(demo
     PRIVATE
         Flatland::Flatland
+        sol2::sol2
+        ${LUA_LIBRARIES}
 )
