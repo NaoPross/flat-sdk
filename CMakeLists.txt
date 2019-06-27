@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
 
 project(flat-sdk)
+
+# Switch between online and offline mode
+
 option(BUILD_OFFLINE "Build offline" OFF)
 if (${BUILD_OFFLINE})
     set_property(
@@ -8,8 +11,6 @@ if (${BUILD_OFFLINE})
         PROPERTY EP_UPDATE_DISCONNECTED 1
     )
 endif()
-
-message("${CMAKE}")
 
 add_custom_target(offline
     ${CMAKE_COMMAND} -H${CMAKE_SOURCE_DIR} -B${CMAKE_BINARY_DIR} -DBUILD_OFFLINE=ON
@@ -20,6 +21,7 @@ add_custom_target(online
     ${CMAKE_COMMAND} -H${CMAKE_SOURCE_DIR} -B${CMAKE_BINARY_DIR} -DBUILD_OFFLINE=OFF
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )
+
 
 include(ExternalProject)
 ExternalProject_Add(libmm
@@ -79,8 +81,11 @@ ExternalProject_Add(flatland
 
 ExternalProject_Add(demo
     DEPENDS flatland
+    DEPENDS sol2
     PREFIX demo
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/demo
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/root
+    CMAKE_ARGS
+        -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/root
+        -DCMAKE_PREFIX_PATH=${CMAKE_BINARY_DIR}/root/lib/cmake
     INSTALL_COMMAND true
 )

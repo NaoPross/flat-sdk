@@ -6,6 +6,7 @@ project(
 
 
 find_package(Flatland 0.1 REQUIRED)
+find_package(sol2 3.0 REQUIRED)
 
 add_executable(demo
     demo.cpp
