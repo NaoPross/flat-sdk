@@ -5,6 +5,7 @@ project(
     LANGUAGES CXX)
 
 include(FindLua)
+include(GNUInstallDirs) # for install
   
 find_package(Flatland 0.1 REQUIRED)
 find_package(sol2 3.0 REQUIRED)
@@ -38,4 +39,31 @@ target_link_libraries(demo
         Flatland::Flatland
         sol2::sol2
         ${LUA_LIBRARIES}
+)
+
+target_include_directories(demo
+    PUBLIC
+        $<INSTALL_INTERFACE:include/>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/
+)
+
+target_compile_definitions(demo
+    PRIVATE
+        ASSETS_INSTALL_PREFIX="${CMAKE_INSTALL_DATADIR}/demo/"
+)
+
+# Install section
+# executable
+install(
+    TARGETS demo
+    EXPORT demo-targets
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
+# assets
+install(
+    DIRECTORY assets/
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/demo
 )
