@@ -13,21 +13,29 @@ if (${BUILD_OFFLINE})
 endif()
 
 add_custom_target(offline
-    ${CMAKE_COMMAND} -H${CMAKE_SOURCE_DIR} -B${CMAKE_BINARY_DIR} -DBUILD_OFFLINE=ON
+    COMMAND ${CMAKE_COMMAND} -H${CMAKE_SOURCE_DIR} -B${CMAKE_BINARY_DIR} -DBUILD_OFFLINE=ON
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )
 
 add_custom_target(online
-    ${CMAKE_COMMAND} -H${CMAKE_SOURCE_DIR} -B${CMAKE_BINARY_DIR} -DBUILD_OFFLINE=OFF
+    COMMAND ${CMAKE_COMMAND} -H${CMAKE_SOURCE_DIR} -B${CMAKE_BINARY_DIR} -DBUILD_OFFLINE=OFF
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )
+
+if (UNIX)
+add_custom_target(run
+    COMMAND LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}/root/lib ${CMAKE_BINARY_DIR}/root/bin/demo
+    DEPENDS demo
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)
+endif()
 
 
 include(ExternalProject)
 ExternalProject_Add(libmm
     PREFIX libmm
-    GIT_REPOSITORY https://github.com/NaoPross/libmm.git
-    GIT_PROGRESS ON
+    # GIT_REPOSITORY https://github.com/NaoPross/libmm.git
+    # GIT_PROGRESS ON
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libmm
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/root
 )
@@ -35,10 +43,12 @@ ExternalProject_Add(libmm
 ExternalProject_Add(libwsdl2
     DEPENDS libmm
     PREFIX libwsdl2
-    GIT_REPOSITORY https://github.com/NaoPross/libwsdl2.git
-    GIT_PROGRESS ON
+    # GIT_REPOSITORY https://github.com/NaoPross/libwsdl2.git
+    # GIT_PROGRESS ON
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libwsdl2
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/root
+    CMAKE_ARGS
+        -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/root
+        DCMAKE_BUILD_TYPE=Debug
 )
 
 ExternalProject_Add(lua
@@ -55,12 +65,12 @@ ExternalProject_Add(lua
 ExternalProject_Add(sol2
     DEPENDS lua
     PREFIX sol2
-    GIT_REPOSITORY https://github.com/ThePhD/sol2.git
-    GIT_TAG v3.0.2
-    GIT_SHALLOW ON
-    GIT_PROGRESS ON
+    # GIT_REPOSITORY https://github.com/ThePhD/sol2.git
+    # GIT_TAG v3.0.2
+    # GIT_SHALLOW ON
+    # GIT_PROGRESS ON
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/sol2
-    PATCH_COMMAND true || patch -f -p1 < ${CMAKE_CURRENT_SOURCE_DIR}/patches/sol2/0001-Fix-CMake-headers-install-target.patch
+    # PATCH_COMMAND true || patch -f -p1 < ${CMAKE_CURRENT_SOURCE_DIR}/patches/sol2/0001-Fix-CMake-headers-install-target.patch
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/root
 )
 
@@ -70,10 +80,11 @@ ExternalProject_Add(flatland
     DEPENDS sol2
     DEPENDS lua
     PREFIX flatland
-    GIT_REPOSITORY https://github.com/NaoPross/flatland.git
-    GIT_PROGRESS ON
+    # GIT_REPOSITORY https://github.com/NaoPross/flatland.git
+    # GIT_PROGRESS ON
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/flatland
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/root
+    CMAKE_ARGS
+        -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/root
 )
 
 ExternalProject_Add(demo
@@ -84,5 +95,4 @@ ExternalProject_Add(demo
     CMAKE_ARGS
         -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/root
         -DCMAKE_PREFIX_PATH=${CMAKE_BINARY_DIR}/root/lib/cmake
-    INSTALL_COMMAND true
 )
