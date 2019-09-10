@@ -23,10 +23,10 @@ void keypressed(const wsdl2::event::key event) {
 int main() {
     flat::initialize();
 
-    flat::window win("Scene Test");
-    flat::state& engine = flat::state::create(win.get_renderer());
+    flat::state& engine = flat::state::create("Demo Test");
 
-    auto render_task = engine.render.delegate_task(&flat::window::render, &win);
+    //auto render_task = engine.render.delegate_task(&flat::window::render, &win);
+    auto& win = engine.window();
 
     auto keylist = engine.events.connect(&keypressed);
     auto quitlist = engine.events.connect<void, wsdl2::event::quit>(
@@ -38,7 +38,12 @@ int main() {
     win.insert(std::make_shared<flat::theater>());
     win.open();
 
+    // Open lua state
+
+    // Run flatland engine loop
     flat::run();
+
+    // Quit flatland engine
     flat::quit();
 
     return 0;

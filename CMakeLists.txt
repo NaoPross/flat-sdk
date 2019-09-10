@@ -87,6 +87,16 @@ ExternalProject_Add(flatland
         -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/root
 )
 
+ExternalProject_Add(luaint
+    DEPENDS flatland
+    DEPENDS sol2
+    DEPENDS lua
+    PREFIX luaint
+    # GIT_REPOSITORY
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/luaint
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/root
+)
+
 ExternalProject_Add(demo
     DEPENDS flatland
     DEPENDS sol2
