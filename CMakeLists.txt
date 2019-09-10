@@ -87,13 +87,13 @@ ExternalProject_Add(flatland
         -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/root
 )
 
-ExternalProject_Add(luaint
+ExternalProject_Add(flatlua
     DEPENDS flatland
     DEPENDS sol2
     DEPENDS lua
-    PREFIX luaint
-    # GIT_REPOSITORY
-    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/luaint
+    PREFIX flatlua
+    # GIT_REPOSITORY https://github.com/NaoPross/flatlua.git
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/flatlua
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/root
 )
 
