@@ -2,6 +2,7 @@ build
 flatland
 libmm
 libwsdl2
+flatlua
 lua
 sol2
 
