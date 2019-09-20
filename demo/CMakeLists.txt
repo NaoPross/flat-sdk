@@ -10,6 +10,7 @@ include(GNUInstallDirs) # for install
 find_package(Flatland 0.1 REQUIRED)
 find_package(sol2 3.0 REQUIRED)
 find_package(Lua REQUIRED)
+find_package(Flatlua 0.1 REQUIRED)
 
 add_executable(demo
     demo.cpp
@@ -38,6 +39,7 @@ target_link_libraries(demo
     PRIVATE
         Flatland::Flatland
         sol2::sol2
+        Flatlua::Flatlua
         ${LUA_LIBRARIES}
 )
 
@@ -66,4 +68,10 @@ install(
 install(
     DIRECTORY assets/
     DESTINATION ${CMAKE_INSTALL_DATADIR}/demo
+)
+
+# scripts
+install(
+    DIRECTORY scripts/
+    DESTINATION ${CMAKE_INSTALL_BINDIR}/scripts
 )

@@ -100,6 +100,7 @@ ExternalProject_Add(flatlua
 ExternalProject_Add(demo
     DEPENDS flatland
     DEPENDS sol2
+    DEPENDS flatlua
     PREFIX demo
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/demo
     CMAKE_ARGS
