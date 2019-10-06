@@ -8,6 +8,7 @@
 #include <flatland/debug.hpp>
 
 #include <flatlua/lua_state.hpp>
+#include "demo/resources.hpp"
 
 void keypressed(const wsdl2::event::key event) {
     if (event.type == wsdl2::event::key::action::down) {
@@ -38,12 +39,13 @@ int main() {
     // Open lua state
     flat::lua::state lua_state(engine);
 
-    auto demo_result = lua_state.load("scripts/demo.lua");
-
-    if (!demo_result.valid())
-    {
-        npdebug("Could not load demo.lua correctly")
-    }
+    build::resource r_demo = LOAD_RESOURCE(scripts_demo_lua);                 
+    auto demo_script = lua_state.safe_script(r_demo.str(),                              
+        [](lua_State*, sol::protected_function_result pfr) {                    
+            sol::error err = pfr;                                               
+            npdebug("Could not load utils.lua: ", err.what());                  
+            return pfr;                                                         
+        });
 
     // Run flatland engine loop
     flat::run();

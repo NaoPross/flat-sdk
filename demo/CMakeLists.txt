@@ -12,8 +12,36 @@ find_package(sol2 3.0 REQUIRED)
 find_package(Lua REQUIRED)
 find_package(Flatlua 0.1 REQUIRED)
 
+function(add_resources out_var)
+  set(result)
+  foreach(in_f ${ARGN})
+    file(RELATIVE_PATH src_f ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/${in_f})
+    set(out_f "${PROJECT_BINARY_DIR}/${in_f}.o")
+    add_custom_command(OUTPUT ${out_f}
+      COMMAND ld -r -b binary -o ${out_f} ${src_f}
+      DEPENDS ${in_f}
+      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+      COMMENT "Building resource object ${out_f}"
+      VERBATIM
+      )
+    list(APPEND result ${out_f})
+  endforeach()
+  set(${out_var} "${result}" PARENT_SCOPE)
+endfunction()
+
+# A simple program that uses resources
+add_resources(SCRIPTS scripts/demo.lua)
+
+message("Embedding resources:")
+foreach(script ${SCRIPTS})
+    message(${script})
+endforeach()
+
+set(CMAKE_VERBOSE_MAKEFILE ON)
+
 add_executable(demo
     demo.cpp
+    ${SCRIPTS}
 )
  
 target_compile_options(demo
@@ -34,6 +62,8 @@ target_compile_features(demo
     PRIVATE
         cxx_std_17
 )
+
+link_directories(${CMAKE_INSTALL_LIBDIR})
 
 target_link_libraries(demo
     PRIVATE
@@ -70,8 +100,19 @@ install(
     DESTINATION ${CMAKE_INSTALL_DATADIR}/demo
 )
 
-# scripts
 install(
     DIRECTORY scripts/
-    DESTINATION ${CMAKE_INSTALL_BINDIR}/scripts
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/scripts
 )
+
+#add_custom_command(TARGET demo POST_BUILD
+#                   COMMAND ${CMAKE_COMMAND} -E copy_if_different
+#                       ${CMAKE_CURRENT_SOURCE_DIR}/scripts/demo.lua
+#                       $<TARGET_FILE_DIR:demo>/demo.lua
+#                   )
+
+# scripts
+#install(
+#    DIRECTORY scripts/
+#    DESTINATION ${CMAKE_INSTALL_BINDIR}/scripts
+#)
