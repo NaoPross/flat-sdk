@@ -8,15 +8,20 @@
 #include <flatland/debug.hpp>
 
 #include <flatlua/lua_state.hpp>
-#include "demo/resources.hpp"
+#include <flatlua/resources.hpp>
+
+#include <wsdl2/event.hpp>
 
 void keypressed(const wsdl2::event::key event) {
     if (event.type == wsdl2::event::key::action::down) {
         if (event.code() == SDLK_e) {
+            npdebug("Exiting with e key")
             flat::state::get().running = false;
         }
     }
 }
+
+build::resource r_demo(LOAD_RESOURCE(scripts_demo_lua));                 
 
 int main() {
     flat::initialize();
@@ -39,13 +44,14 @@ int main() {
     // Open lua state
     flat::lua::state lua_state(engine);
 
-    build::resource r_demo = LOAD_RESOURCE(scripts_demo_lua);                 
-    auto demo_script = lua_state.safe_script(r_demo.str(),                              
-        [](lua_State*, sol::protected_function_result pfr) {                    
-            sol::error err = pfr;                                               
-            npdebug("Could not load utils.lua: ", err.what());                  
-            return pfr;                                                         
-        });
+    lua_state.register_module("demo", r_demo);
+    lua_state.require("demo"); // execute script
+
+    auto keyesc = lua_state.get_event("quit_key");
+    auto keya = lua_state.get_event("mod_key");
+
+    //(*keyesc).invoke(wsdl2::event::key());
+    //(*keya).invoke(wsdl2::event::key());
 
     // Run flatland engine loop
     flat::run();
