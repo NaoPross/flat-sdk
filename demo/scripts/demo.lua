@@ -1,28 +1,27 @@
-print("Loading demo.lua")
+-- Demo main script --
 local ev = require_symbol("events")
 
 angle = 0
 radius = 0.5
 
 quit_fct = function (event)
-            print("Exiting using lua binding!!")
-            if event.action_ == keys.action.down and 
-                event.code() == keys.escape then
-                quit() -- from flatland
+            if event.action == keys.action.down and 
+                event:code() == keys.esc then
+                print("Exiting using lua binding!!")
+                flat:quit() -- from flatland
             end
         end
 
 -- connect: from flatland
 local quit_fb = ev.connect("quit_key", events.key, quit_fct) -- ESC
 
-print(quit_fb)
 if not quit_fb then
     error("quit_key not bound correctly")
 end
 
 mod_fct = function (event)
-            if event.action_ == keys.action.down and 
-               event.code() == keys.A then
+            if event.action == keys.action.down and 
+               event:code() == keys.a then
                 local x = radius * math.cos(angle)
                 local y = radius * math.sin(angle)
                 print("(" .. x .. ", " .. y .. ")")

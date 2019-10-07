@@ -43,6 +43,7 @@ int main() {
 
     // Open lua state
     flat::lua::state lua_state(engine);
+    lua_state.open_libraries(sol::lib::math);
 
     lua_state.register_module("demo", r_demo);
     lua_state.require("demo"); // execute script
@@ -55,9 +56,6 @@ int main() {
 
     // Run flatland engine loop
     flat::run();
-
-    // TODO, avoid this call, Quit flatland engine
-    flat::quit();
 
     return 0;
 }
